@@ -300,8 +300,12 @@ function UIStuff()
 end
 
 RegisterNetEvent('mythic_ui:client:UpdateStatus')
-AddEventHandler('mythic_ui:client:UpdateStatus', function(hunger, thirst)
-    updateStatus(hunger, thirst)
+AddEventHandler('mythic_ui:client:UpdateStatus', function(Status)
+    status = Status
+    SendNUIMessage({
+        action = "updateStatus",
+        st = Status,
+    })
 end)
 
 RegisterNetEvent('mythic_ui:client:UpdateFuel')
@@ -313,14 +317,6 @@ AddEventHandler('mythic_ui:client:UpdateFuel', function(veh)
         })
     end
 end)
-
-function updateStatus(hunger, thirst)
-    SendNUIMessage({
-        action = "updateStatus",
-        hunger = hunger,
-        thirst = thirst
-    })
-end
 
 RegisterNetEvent('mythic_ui:client:DisplayUI')
 AddEventHandler('mythic_ui:client:DisplayUI', function()
