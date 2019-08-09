@@ -16,40 +16,6 @@ body {
     width:100%;
 }
 
-.money {
-    position: absolute;
-    right: 1%;
-    top: 5%;
-    text-shadow: 2px 2px #000000;
-}
-
-.cash {
-    color: rgb(114, 204, 114);
-}
-
-.bank {
-    color: rgb(93, 182, 229);
-}
-
-.change {
-    height: 30px;
-    font-size: 30px;
-    width: fit-content;
-    max-width: 209;
-    overflow: hidden;
-    text-align: right;
-    white-space: nowrap;
-}
-
-.positive {
-    color: rgb(114, 204, 114);
-}
-
-.negative {
-    color: rgb(224, 50, 50);
-}
-
-
 #heal, #armor, #hunger, #thirst, #stamina, #voice {
     border: 3px solid rgb(77, 77, 77);
     background: rgb(155, 155, 155);
@@ -155,7 +121,7 @@ body {
 
 .speed, .gas {
     font-family: "gta-ui", Verdana, Tahoma;
-    font-size: 60px;
+    font-size: 40px;
     position: absolute;
     bottom: 4.68%;
     text-shadow: -1px 1px 2px #000, 1px 1px 2px #000, 1px -1px 0 #000, -1px -1px 0 #000;
@@ -204,7 +170,7 @@ body {
 }
 
 .ampm {
-    color: rgb(240, 200, 80);
+    color: #00D5FF;
 }
 
 .seatbelt.off, .cruise.off {
@@ -226,9 +192,9 @@ body {
 }
 
 .seperator {
-    color: rgb(224, 50, 50);
+    color: #00D5FF;
 }
 
 .seperator2 {
-    color: rgb(240, 200, 80);
+    color: #727272;
 }
