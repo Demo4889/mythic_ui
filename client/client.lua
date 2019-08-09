@@ -8,6 +8,8 @@ local showUi = false
 local prevSpeed = 0
 local currSpeed = 0.0
 local cruiseSpeed = 999.0
+local engineIsOn = false
+local engineInput = 183
 local prevVelocity = {x = 0.0, y = 0.0, z = 0.0}
 
 local cruiseIsOn = false
@@ -51,13 +53,13 @@ end
 
 function getCardinalDirectionFromHeading(heading)
     if ((heading >= 0 and heading < 45) or (heading >= 315 and heading < 360)) then
-        return "Northbound" -- North
+        return "NB" -- North
     elseif (heading >= 45 and heading < 135) then
-        return "Eastbound" -- East
+        return "EB" -- East
     elseif (heading >=135 and heading < 225) then
-        return "Southbound" -- South
+        return "SB" -- South
     elseif (heading >= 225 and heading < 315) then
-        return "Westbound" -- West
+        return "WB" -- West
     end
 end
 
@@ -131,9 +133,6 @@ function UIStuff()
             Citizen.Wait(1)
             HideHudComponentThisFrame( 7 ) -- Area Name
             HideHudComponentThisFrame( 9 ) -- Street Name
-            HideHudComponentThisFrame( 3 ) -- SP Cash display 
-            HideHudComponentThisFrame( 4 )  -- MP Cash display
-            HideHudComponentThisFrame( 13 ) -- Cash changesSetPedHelmet(GetPlayerPed(-1), false)
             SetPedHelmet(GetPlayerPed(-1), false)
 
             
@@ -206,6 +205,24 @@ function UIStuff()
                             prevVelocity = GetEntityVelocity(GetVehiclePedIsIn(GetPlayerPed(-1)))
                         end
                     end
+
+                    -- Engine toggle when ped is in vehicle
+					if (GetPedInVehicleSeat(GetVehiclePedIsIn(GetPlayerPed(-1)), -1) == GetPlayerPed(-1)) then
+						if IsControlJustReleased(0, engineInput) then
+							engineIsOn = not engineIsOn
+							toggleEngine()
+						end
+						if currSpeed > 10.0 then
+							DisableControlAction(0, engineInput)
+						end
+					end
+			
+					function toggleEngine()
+						local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+						if vehicle ~= nil and vehicle ~= 0 and GetPedInVehicleSeat(vehicle, 0) then
+							SetVehicleEngineOn(vehicle, (not GetIsVehicleEngineRunning(vehicle)), false, true)
+						end
+					end
     
                     -- When player in driver seat, handle cruise control
                     if (GetPedInVehicleSeat(GetVehiclePedIsIn(GetPlayerPed(-1)), -1) == GetPlayerPed(-1)) then
@@ -240,6 +257,7 @@ function UIStuff()
                 if inCar then
                     seatbeltIsOn = false
                     cruiseIsOn = false
+                    engineIsOn = false
                     SendNUIMessage({
                         action = 'hidecar'
                     })
@@ -304,18 +322,8 @@ function updateStatus(hunger, thirst)
     })
 end
 
-RegisterNetEvent('mythic_characters:client:CharacterSpawned')
-AddEventHandler('mythic_characters:client:CharacterSpawned', function()
-    TriggerServerEvent('mythic_hud:server:GetMoneyStuff')
-end)
-
-RegisterNetEvent('mythic_hud:client:DisplayMoneyStuff')
-AddEventHandler('mythic_hud:client:DisplayMoneyStuff', function(cash, bank)
-    SendNUIMessage({
-        action = 'display',
-        cash = cash,
-        bank = bank
-    })
+RegisterNetEvent('mythic_ui:client:DisplayUI')
+AddEventHandler('mythic_ui:client:DisplayUI', function()
     SendNUIMessage({
         action = 'showui'
     })
@@ -323,28 +331,10 @@ AddEventHandler('mythic_hud:client:DisplayMoneyStuff', function(cash, bank)
     showUi = true
 end)
 
-RegisterNetEvent('mythic_characters:client:Logout')
-AddEventHandler('mythic_characters:client:Logout', function()
+RegisterNetEvent('mythic_ui:client:HideUI')
+AddEventHandler('mythic_ui:client:HideUI', function()
     SendNUIMessage({
         action = 'hideui'
     })
     showUi = false
-end)
-
-RegisterNetEvent('mythic_hud:client:DisplayMoneyChange')
-AddEventHandler('mythic_hud:client:DisplayMoneyChange', function(account, amount)
-    local type = nil
-
-    if amount < 0 then
-        type = 'negative'
-    else
-        type = 'positive'
-    end
-
-    SendNUIMessage({
-        action = 'change',
-        type = type,
-        account = account,
-        amount = amount
-    })
 end)
