@@ -2,7 +2,11 @@ var cash = 0
 var bank = 0
 
 window.addEventListener('message', function (event) {
-
+    var data = event.data;
+        $(".container").css("display",data.show? "none":"block");
+        if (event.data.action == "updateStatus") {
+            updateStatus(event.data.st);
+        }
 
     switch(event.data.action) {
         case 'tick':
@@ -10,38 +14,6 @@ window.addEventListener('message', function (event) {
             $("#boxHeal").css("width", event.data.health + "%");
             $("#boxArmor").css("width", event.data.armor + "%");
             $("#boxStamina").css("width", event.data.stamina + "%");
-            break;
-        case 'display':
-            cash = event.data.cash;
-            bank = event.data.bank;
-    
-            console.log('$' + cash);
-    
-            $('.cash').html('$' + formatCurrency(cash));
-            $('.bank').html('$' + formatCurrency(bank));
-            break;
-        case 'change':
-            var $element = $('<span class="' + event.data.type + '">$ ' + event.data.amount + '</span>');
-            if (event.data.account === 'cash') {
-                cash += event.data.amount;
-    
-                $('.cash-change').append($element);
-                $('.cash').html('$' + formatCurrency(cash));
-                setTimeout(function() {
-                    $element.remove();
-                }, 1000);
-            } else {
-                bank += event.data.amount;
-                
-                $('.bank-change').append($element);
-                $('.bank').html('$' + formatCurrency(bank));
-                setTimeout(function() {
-                    $element.remove();
-                }, 1000);
-            }
-            break
-        case 'updateStatus':
-            updateStatus(event.data.hunger, event.data.thirst);
             break;
         case 'hidecar':
             $('.car').hide();
@@ -135,11 +107,7 @@ window.addEventListener('message', function (event) {
     }
 });
 
-function updateStatus(hunger, thirst){
-    $('#boxHunger').css('width', hunger + '%')
-    $('#boxThirst').css('width', thirst + '%')
-}
-
-function formatCurrency(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+function updateStatus(status){
+    $('#boxHunger').css('width', status[0].percent+'%')
+    $('#boxThirst').css('width', status[1].percent+'%')
 }
