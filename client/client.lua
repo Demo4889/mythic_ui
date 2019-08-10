@@ -169,7 +169,7 @@ function UIStuff()
                 end
 
                 if IsPedInAnyVehicle(GetPlayerPed(-1)) then
-                    if IsControlJustReleased(0, 311) then
+                    if IsControlJustReleased(0, 29) then
                         local vehClass = GetVehicleClass(GetVehiclePedIsIn(GetPlayerPed(-1)))
                         if vehClass ~= 8 and vehClass ~= 13 and vehClass ~= 14 then
                             if seatbeltIsOn then
@@ -204,6 +204,8 @@ function UIStuff()
                             -- Update previous velocity for ejecting player
                             prevVelocity = GetEntityVelocity(GetVehiclePedIsIn(GetPlayerPed(-1)))
                         end
+                        else
+                            DisableControlAction(0, 75)
                     end
 
                     -- Engine toggle when ped is in vehicle
