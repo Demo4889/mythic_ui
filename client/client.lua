@@ -289,10 +289,10 @@ function UIStuff()
         while showUi do
             Citizen.Wait(1)
             if IsPedInAnyVehicle(GetPlayerPed(-1)) then
-                if DecorExistOn(GetVehiclePedIsIn(GetPlayerPed(-1)), 'VEH_FUEL') then
+                if DecorExistOn(GetVehiclePedIsIn(GetPlayerPed(-1)), '_FUEL_LEVEL') then
                     SendNUIMessage({
                         action = 'update-fuel',
-                        fuel = math.ceil(round(exports['mythic_fuel']:GetFuel(GetVehiclePedIsIn(GetPlayerPed(-1)))))
+                        fuel = math.ceil(round(exports['LegacyFuel']:GetFuel(GetVehiclePedIsIn(GetPlayerPed(-1)))))
                     })
                     Citizen.Wait(60000)
                 end
@@ -312,10 +312,10 @@ end)
 
 RegisterNetEvent('mythic_ui:client:UpdateFuel')
 AddEventHandler('mythic_ui:client:UpdateFuel', function(veh)
-    if DecorExistOn(veh, 'VEH_FUEL') then
+    if DecorExistOn(veh, '_FUEL_LEVEL') then
         SendNUIMessage({
             action = 'update-fuel',
-            fuel = math.ceil(round(exports['mythic_fuel']:GetFuel(veh)))
+            fuel = math.ceil(round(exports['LegacyFuel']:GetFuel(veh)))
         })
     end
 end)
